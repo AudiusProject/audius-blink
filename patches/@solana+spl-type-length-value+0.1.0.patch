@@ -1,0 +1,10 @@
+diff --git a/node_modules/@solana/spl-type-length-value/lib/esm/splDiscriminate.js b/node_modules/@solana/spl-type-length-value/lib/esm/splDiscriminate.js
+index bf27a86..ff2a791 100644
+--- a/node_modules/@solana/spl-type-length-value/lib/esm/splDiscriminate.js
++++ b/node_modules/@solana/spl-type-length-value/lib/esm/splDiscriminate.js
+@@ -1,4 +1,4 @@
+-import { createHash } from 'crypto';
++import { createHash } from 'node:crypto';
+ export const splDiscriminate = (discriminator, length = 8) => {
+     const digest = createHash('sha256').update(discriminator).digest();
+     return digest.subarray(0, length);
