@@ -42,7 +42,11 @@ type AudiusResponse = {
 	data: User
 }
 
-app.use('*', cors())
+app.use('*', cors({
+  origin: '*',
+  allowMethods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Content-Encoding', 'Accept-Encoding']
+}))
 
 app.openapi(
   createRoute({
