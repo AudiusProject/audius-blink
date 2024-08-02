@@ -1,4 +1,6 @@
 import {
+  clusterApiUrl,
+  Connection,
   PublicKey,
   VersionedTransaction,
 } from '@solana/web3.js';
@@ -21,13 +23,17 @@ import { cors } from 'hono/cors'
 // @ts-ignore
 globalThis.Buffer = Buffer;
 
+type Bindings = {
+  RPC_ENDPOINT: string
+}
+
 const TIP_AMOUNT_AUDIO_OPTIONS = [1, 10, 20];
 const DEFAULT_TIP_AMOUNT_AUDIO = 1;
 const AUDIUS_RPC = 'https://discoveryprovider.audius.co'
 const AUDIO_DECIMALS = 8
 const AUDIO_MINT = '9LzCMqDgTKYz9Drzqnpgee3SGa89up3a247ypMj2xrqM'
 
-const app = new OpenAPIHono();
+const app = new OpenAPIHono<{ Bindings: Bindings }>();
 
 type User = {
 	name: string
@@ -199,6 +205,7 @@ app.openapi(
       new PublicKey(account),
       new PublicKey(spl_wallet),
       parsedAmount * Math.pow(10, AUDIO_DECIMALS),
+      new Connection(c.env.RPC_ENDPOINT ?? clusterApiUrl('mainnet-beta'))
     );
     const response: ActionPostResponse = {
       transaction: Buffer.from(transaction.serialize()).toString('base64'),
@@ -211,6 +218,7 @@ async function prepareTipTransaction(
   sender: PublicKey,
   recipient: PublicKey,
   audioAmount: number,
+  connection: Connection
 ): Promise<VersionedTransaction> {
   const payer = new PublicKey(sender);
 	let sourceAccount = await getAssociatedTokenAddress(
@@ -225,7 +233,7 @@ async function prepareTipTransaction(
 			audioAmount
 		)
   ];
-  return prepareTransaction(instructions, payer);
+  return prepareTransaction(instructions, payer, connection);
 }
 
 export default app

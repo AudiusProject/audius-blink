@@ -1,14 +1,15 @@
 import {
+  Connection,
   PublicKey,
   TransactionInstruction,
   TransactionMessage,
   VersionedTransaction
 } from '@solana/web3.js';
-import { connection } from './connection';
 
 export async function prepareTransaction(
   instructions: TransactionInstruction[],
-  payer: PublicKey
+  payer: PublicKey,
+  connection: Connection
 ) {
   const blockhash = await connection
     .getLatestBlockhash({ commitment: 'max' })
