@@ -16,6 +16,7 @@ import {
   ActionPostResponse,
 } from '@solana/actions';
 import { Buffer } from "buffer";
+import { cors } from 'hono/cors'
 
 // @ts-ignore
 globalThis.Buffer = Buffer;
@@ -40,6 +41,8 @@ type User = {
 type AudiusResponse = {
 	data: User
 }
+
+app.use('*', cors())
 
 app.openapi(
   createRoute({
